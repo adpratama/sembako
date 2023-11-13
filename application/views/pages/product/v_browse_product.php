@@ -1,81 +1,117 @@
-<!-- breadcrumb-section -->
-<div class="breadcrumb-section breadcrumb-bg">
+<!-- Start All Title Box -->
+<div class="all-title-box">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 offset-lg-2 text-center">
-                <div class="breadcrumb-text">
-                    <p>Fresh and Organic</p>
-                    <h1>Shop</h1>
-                </div>
+            <div class="col-lg-12">
+                <h2>Shop</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Shop</li>
+                </ul>
             </div>
         </div>
     </div>
 </div>
-<!-- end breadcrumb section -->
+<!-- End All Title Box -->
 
-<!-- products -->
-<div class="product-section mt-150 mb-150">
+<div class="flash-data" data-flashdata="<?= $this->session->flashdata('message_name') ?>"></div>
+
+<!-- Start Shop Page  -->
+<div class="shop-box-inner">
     <div class="container">
-
         <div class="row">
-            <div class="col-md-12">
-                <div class="product-filters">
-                    <ul>
-                        <li class="active" data-filter="*">All</li>
-                        <!-- <li data-filter=".strawberry">Strawberry</li>
-                        <li data-filter=".berry">Berry</li>
-                        <li data-filter=".lemon">Lemon</li> -->
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="row product-lists">
-
-
-            <?php
-            foreach ($product as $b) {
-
-            ?>
-                <div class="col-lg-4 col-md-6 text-center">
-                    <?php
-
-                    echo form_open('order/add');
-                    echo form_hidden('id', $b->menu_id);
-                    echo form_hidden('qty', 1);
-                    echo form_hidden('price', $b->menu_harga);
-                    echo form_hidden('name', $b->menu_nama);
-                    echo form_hidden('redirect_page', str_replace('index.php/', '', current_url())); ?>
-                    <div class="single-product-item">
-                        <div class="product-image">
-                        <a href="product/show/<?= $b->menu_seo ?>"><img src="<?= base_url(); ?>assets/img/menu_folder/<?= $b->menu_foto ?>" alt=""></a>
+            <div class="col-xl-12 col-lg-12 col-sm-6 col-xs-6 shop-content-right">
+                <div class="right-product-box">
+                    <div class="product-item-filter row">
+                        <div class="col-lg-8"></div>
+                        <div class="col-lg-4 col-sm-6 text-right align-items-end">
+                            <div class="toolbar-sorter-right">
+                                <form action="#">
+                                    <input class="form-control" placeholder="Search here..." type="text">
+                                    <!-- <button type="submit"> <i class="fa fa-search"></i> </button> -->
+                                </form>
+                            </div>
                         </div>
-                        <h3><?= $b->menu_nama ?></h3>
-                        <p class="product-price"><span>Per item</span> Rp<?= number_format($b->menu_harga, 2, ',', '.') ?></p>
-                        <button class="btn btn-primary toastrDefaultSuccess" id=""><i class="fas fa-shopping-cart"></i> Add to Cart</button>
                     </div>
 
-                    <?php
-                    echo form_close(); ?>
-                </div>
-            <?php
-            }
-            ?>
-        </div>
+                    <!-- List Product -->
+                    <div class="product-categorie-box">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade show active" id="grid-view">
+                                <div class="row">
+                                    <?php
+                                    foreach ($products as $b) {
 
-        <!-- <div class="row">
-            <div class="col-lg-12 text-center">
-                <div class="pagination-wrap">
-                    <ul>
-                        <li><a href="#">Prev</a></li>
-                        <li><a href="#">1</a></li>
-                        <li><a class="active" href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">Next</a></li>
-                    </ul>
+                                        $stok = $b->menu_stok - $b->menu_jual;
+                                    ?>
+                                        <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2">
+                                            <?php
+
+                                            echo form_open('order/add');
+                                            echo form_hidden('id', $b->menu_id);
+                                            echo form_hidden('qty', 1);
+                                            echo form_hidden('price', $b->menu_harga);
+                                            echo form_hidden('name', $b->menu_nama);
+                                            echo form_hidden('redirect_page', str_replace('index.php/', '', current_url()));
+
+                                            if (empty($b->menu_foto)) {
+                                                $menu_foto = "no-image-icon.jpg";
+                                            } else {
+                                                $menu_foto = $b->menu_foto;
+                                            }
+                                            ?>
+                                            <div class="products-single fix">
+                                                <div class="box-img-hover">
+                                                    <div class="type-lb">
+                                                        <p class="sale">Rp<?= number_format($b->menu_harga) ?></p>
+                                                    </div>
+                                                    <img src="<?= base_url() ?>assets/img/products/<?= $menu_foto ?>" class="img-fluid" alt="Image">
+                                                    <div class="mask-icon">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="<?= base_url('product/show/' . $b->menu_seo) ?>" data-toggle="tooltip" data-placement="right" title="View">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                        <button class="cart" id=""> Add to Cart</button>
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                                <div class="why-text">
+                                                    <a href="<?= base_url('product/show/' . $b->menu_seo) ?>">
+                                                        <h4><?= $b->menu_nama ?></h4>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <?php
+                                            echo form_close(); ?>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div> -->
+        </div>
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-6 col-xs-6 text-center">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link pagination-button" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link pagination-button" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
 </div>
-<!-- end products -->
+<!-- End Shop Page -->

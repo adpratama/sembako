@@ -1,39 +1,41 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Home extends CI_Controller {
-
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/userguide3/general/urls.html
-	 */
+class Home extends CI_Controller
+{
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->library('session');
+		$this->load->library('pagination');
 		$this->load->helper('string');
+		$this->load->model('M_Product');
 		$this->load->model('M_Home');
+		$this->load->model('M_Category');
 		$this->load->helper('date');
 	}
+
 	public function index()
 	{
+		$cart_content = $this->cart->contents();
+		$jml_item = 0;
+
+		foreach ($cart_content as $value) {
+			$jml_item = $jml_item + $value['qty'];
+		}
+
 		$data = [
 			'title' => 'Home',
 			'style' => 'layouts/_style',
 			'pages' => 'pages/home/v_home',
+			'category_section' => 'pages/product/v_category_section',
+			'best_seller_section' => 'pages/product/v_best_seller',
 			'script' => 'layouts/_script',
-			'best' => $this->db->order_by('menu_jual', 'DESC')->order_by('menu_nama', 'ASC')->limit(3)->get('v_menu')->result()
+			'categories' => $this->M_Category->list_category(),
+			'best' => $this->M_Product->best(),
+			'cart_content' => $cart_content,
+			'jml_item' => $jml_item,
+			'total' => number_format($this->cart->total())
 		];
 
 		$this->load->view('index', $data);
